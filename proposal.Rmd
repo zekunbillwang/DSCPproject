@@ -1,0 +1,60 @@
+---
+title: "Proposal"
+author: "ZEKUN WANG,JINWEN XU,YUMAN WU,YIDAN HUO,YICHENG DU"
+date: "2023-11-5"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+1.**Including code to read data**
+
+```{r, results='asis'}
+library(htmltools)
+library(kableExtra)
+data <- read.table("amazon_reviews_us_Musical_Instruments_v1_00.tsv", header = TRUE, sep = "\t", fill = TRUE)
+selected_data <- head(data)
+
+kable(selected_data, "html", escape = FALSE) %>%
+  kable_styling(bootstrap_options = c("striped", "hover", "condensed", "responsive"),
+                font_size = 12) %>%
+  scroll_box(width = "750px", height = "500px")
+```
+
+
+2.**Descriptions of the variables:**
+
+We selected the Amazon US Customer Reviews Dataset from Kaggle, which has a total size of 54.41GB. This dataset contains 37 distinct folders, corresponding to different product categories. Each folder includes 15 variables such as 'star_rating'， 'customer_id'，and so on. For our analysis, we focused on two specific variables: 'star_rating' and 'review_date'.The specific variable explanations are as follows:
+
+(1)Star_rating” is the 1-5 star rating of the review. Its data type is int.
+(2)“Review_date” is the date when the review is published. Its data type is datetime.
+
+
+3.**Question**:
+
+**3.1**  How can we create new variables that capture the full information of a time series for further effective analysis?
+
+**3.2** How can we know the 5 fields with the best development and the 5 fields with the worst development in recent years?
+
+4.**Statistical methods**
+
+**4.1**:
+
+   Covariance function of a time series\[ \Gamma(m)=[\gamma(0),\gamma(1)...,\gamma(m)]\]. The covariance function is a function of the covariance between two random variables and can reveal the correlation of the random variables at different points in time.
+The sample autocovariance function of \[\{x_1,x_2,...,x_n\} \]is defined as:
+\[ \gamma(h)=n^{-1}\sum_{j=1}^{n-h}(x_{j+h}-\bar{x})(x_{j}-\bar{x}),0 \leq h<n\] where \( \bar{x} \) is the mean of \( x_i \) .
+
+**Computational steps**:
+Calculate the sample covariance function: 
+(1)Calculate the mean of the sequence. 
+(2)For each possible lag value, compute the covariance between the lagged sequence and the original sequence. 
+(3)Use these covariances as estimates for the autocovariance function.
+
+**4.2**: Calculate the average rating for different product categories and sort them. Determine the top five hottest product categories on Amazon, as well as the five least hottest categories.
+
+
+
+
+
