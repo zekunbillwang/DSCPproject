@@ -1,0 +1,143 @@
+---
+title: "Group 1 Report"
+author: "Zekun Wang, Jinwen Xu,Yuman Wu, Yidan Huo, Yicheng Du"
+date: "2023-12-12"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction:
+
+Utilizing the Amazon US Customer Reviews Dataset, our analysis aims to identify the
+top five fields with the most and least development in recent years. Additionally, we
+seek to develop new variables that capture the full information of a time series for
+further effective analysis. Employing statistical techniques, we have executed scripts
+to calculate average star-ratings and auto-correlation coefficients effectively. Our
+results offer valuable insights for strategic business decisions.
+
+**Github Link:https://github.com/zekunbillwang/DSCPproject**
+
+## Describe Data:
+
+We're using Kaggle's Amazon US Customer Reviews Dataset, a 54.41GB collection
+spanning 37 folders, each with 15 variables for different product categories. Our
+analysis focuses on three columns: star_rating, review_date, and product_id. The
+refined dataset, free of outliers and missing values, includes 904,040 rows and 3
+columns. The descriptions of the variables we chose are as follows:
+
+**1.** “Star_rating” is the 1-5 star rating of the review.
+
+**2.** “Review_date” is the date when the review is published.
+
+## Question :
+
+**1.** How can we know the 5 fields with the best development and the 5 fields with the worst development in recent years?
+
+**2.** How can we create new variables that capture the full information of a time series for further effective analysis?
+
+## Statistical Method:
+
+**1.**For question 1, we calculated the average star-rating for various product types and
+conducted a comparative analysis to identify the top five products with the highest
+average ratings and the bottom five products with the lowest average ratings.
+
+**2.**For question 2, we calculated the auto-covariance function matrix of the time series. The relevant computational steps are as follows:
+
+**(1)**First,we suppose there is a time series $X_1,X_2,...,X_n$,then calculate the mean
+sequence $\bar{X}$.
+
+**(2)**Second, for each possible lag value h, we compute the sample covariance between the lagged sequence and the original sequence, which is:$\gamma(h)=n^{-1}\sum_{j=1}^{n-h}(X_{j+h}-\bar{X})(X_j-\bar{X})$
+
+**(3)**Third, we calculate the Auto-covariance function matrix:$\Gamma({m})=[\gamma(0),\gamma(1),...,\gamma(m)]$
+
+## Result:
+
+**1.** For the first question, the results revealed the top five and bottom five products
+based on their average star ratings:
+
+```{r top5-table, echo=FALSE, message=FALSE}
+library(knitr)
+
+# Recreate the Top 5 table as a data frame
+top5 <- data.frame(
+  Category = c("Gift card", "Digital Music Purchase", "Music", "Grocery", "Multilingual"),
+  Score = c(4.73, 4.64, 4.44, 4.31, 4.31)
+)
+
+# Render the table in R Markdown
+kable(top5, caption = "Top 5 Categories")
+```
+
+
+And for the "Bottom 5" table:
+
+
+```{r bottom5-table, echo=FALSE, message=FALSE}
+# Recreate the Bottom 5 table as a data frame
+bottom5 <- data.frame(
+  Category = c("Digital Software", "Software", "Major Appliance", "Mobile electronics", "Digital video games"),
+  Score = c(3.54, 3.57, 3.72, 3.76, 3.85)
+)
+
+# Render the table in R Markdown
+kable(bottom5, caption = "Bottom 5 Categories")
+```
+
+**2.**
+For the question 2, taking 'Musical_Instruments' as an example, we select it to calculate the average daily star rating of different products, with a data length of 4558. To visually demonstrate it, we create a curve of $\gamma(h)$, as h changes.
+
+<img src="image1.png" alt="The curve of gamma(h) as h changes." width="600"/>
+
+From the plot, we found that the data in this series does not show seasonality but the trend is more obvious, and it is highly correlated with data that is closer in time.
+Furthermore, the auto-covariance function matrix can be used for further application and
+visualization to analyze the properties of time series.
+
+## Statistical computation:
+
+Our dataset comprises a total of 37 category files, each potentially as large as 10
+GBs. To effectively process this data, we have structured our approach as follows:
+
+**1.**For Question 1, our method uses a script called Pre1.sh to split each large file into
+100 smaller parts and isolates the important "star-rating" column. We then utilize
+Job1.sh and Job1.sub to launch 100 simultaneous processes, which aim to
+aggregate the "star-rating" from all the pieces. The operation concludes with
+Post1.sh, a script that combines these partial sums and counts the overall number of
+reviews to compute the average "star-rating". The entire process is completed within
+72 hours, using up to 8192 MB of disk space.
+
+**2.** For Question 2, Job2.R calculates auto-correlation coefficients using the average
+star-ratings from Job 1, while Job2.sh and Job2.sub manage the execution. The
+entire task is completed in 3 hours and 51 minutes, using 8192MB of disk space.
+
+## Weakness:
+
+For the second question, in theory, an infinite amount of data is required to
+accurately calculate the Autocorrelation Function (ACF). However, since the available
+data is finite, this requirement cannot be met, leading to spectral leakage and
+resulting in errors.
+
+## Conclusion:
+Our analysis of the Amazon US Customer Reviews Dataset from Kaggle revealed significant
+insights into customer satisfaction across various product categories. By focusing on
+'star_rating', 'review_date', and 'product_id', we determined product category performance and time series analysis.These insights are invaluable for businesses in understanding consumer preferences and for guiding strategic decisions on Amazon's platform.
+
+## Contribution:
+
+```{r Contribution, echo=FALSE, message=FALSE}
+library(knitr)
+team_contributions <- data.frame(
+  Member = c("Jinwen Xu", "Zekun Wang", "Yuman Wu", "Yidan Huo", "Yicheng Du"),
+  Proposal = c(1, 1, 1, 1, 1),
+  Coding = c(1, 1, 1, 1, 1),
+  Presentation = c(1, 1, 1, 1, 1),
+  Report = c(1, 1, 1, 1, 1)
+)
+
+# Render the table using kable
+kable(team_contributions, align = 'c', caption = "Team Contributions")
+
+```
+
