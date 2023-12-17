@@ -1,0 +1,6 @@
+job 1 bill.sub
+job 2 bill2.sub
+script pre 1 pre.sh
+script post 1 post.sh
+script post 2 post2.sh
+parent 1 child 2
